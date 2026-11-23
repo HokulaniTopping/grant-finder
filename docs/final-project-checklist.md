@@ -100,9 +100,10 @@ Everything the proposal promises, so the finished app covers all of it.
 - [ ] Add a **Saved records** answer to the proposal (also needed for the database work)
 
 ### Grant data
-- [ ] Collect a set of real public grant listings (foundation pages, county/state pages, PDFs, Grants.gov) covering education, culture, food, and environment
-- [ ] Each listing records: amount, deadline, island/location restriction, org-type requirement (e.g. 501(c)(3) only), focus areas, and the exact eligibility sentence
-- [ ] Store listings so the app can match against them
+- [x] Collect a set of real public grant listings (foundation pages, county/state pages, PDFs, Grants.gov) covering education, culture, food, and environment
+- [x] Each listing records: amount, deadline, island/location restriction, org-type requirement (e.g. 501(c)(3) only), focus areas, and the exact eligibility sentence
+- [x] Store listings so the app can match against them (`data/grants.json`; moves to the database later)
+- [ ] Check each listing against its source page and set `"verified": true`
 
 ### Core feature 1: Profile → structured fields
 - [ ] Profile form where the user types a plain-language description (form exists, not wired up yet)
@@ -112,11 +113,11 @@ Everything the proposal promises, so the finished app covers all of it.
 - [ ] If the profile is too short (e.g. "we help kupuna"), ask follow-up questions for org type, island, and budget
 
 ### Core feature 2: Rank and explain matches
-- [ ] Island/location eligibility rule: exclude grants restricted to other islands
-- [ ] Org-type eligibility rule: exclude 501(c)(3)-only grants for fiscally sponsored groups, with the reason shown
+- [x] Island/location eligibility rule: exclude grants restricted to other islands
+- [x] Org-type eligibility rule: exclude 501(c)(3)-only grants for fiscally sponsored groups, with the reason shown
 - [x] Deadline rule: open / closed / unknown (`deadline_status`, PR #2)
 - [ ] Closed grants are not shown as matches and are listed under "Closed" instead
-- [ ] Rank eligible grants by fit to focus areas and needs
+- [x] Rank eligible grants by fit to focus areas and needs (`match_score`, PR #5; wiring still to do)
 - [ ] Each match shows the amount, the deadline, a one-line reason it fits, and the exact eligibility sentence that reason is based on
 - [ ] Excluded grants show why they were excluded
 - [ ] `/api/grants` returns real matches instead of the placeholder
