@@ -117,6 +117,7 @@ def org_type_eligibility(profile: dict[str, object], grant: dict[str, object]) -
     A grant lists accepted types in "org_types", such as "501(c)(3)" or
     "fiscally sponsored". A missing list on either side is "unknown". The
     comparison ignores case, spaces, and parentheses, so "501c3" matches "501(c)(3)".
+    A 501(c)(3) also qualifies for a grant that accepts any "nonprofit".
     """
     accepted = grant.get("org_types")
     if not isinstance(accepted, list) or not accepted:
@@ -124,7 +125,9 @@ def org_type_eligibility(profile: dict[str, object], grant: dict[str, object]) -
     org_type = profile.get("org_type")
     if not isinstance(org_type, str) or not org_type.strip():
         return Eligibility("unknown", "Your organization type is not known yet.")
-    if _normalize_org_type(org_type) in {_normalize_org_type(str(t)) for t in accepted}:
+    accepted_keys = {_normalize_org_type(str(t)) for t in accepted}
+    org_key = _normalize_org_type(org_type)
+    if org_key in accepted_keys or (org_key == "501c3" and "nonprofit" in accepted_keys):
         return Eligibility("eligible", f"Accepts {org_type} organizations.")
     allowed = ", ".join(str(t) for t in accepted)
     return Eligibility(

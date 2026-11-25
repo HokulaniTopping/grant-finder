@@ -167,3 +167,9 @@ def test_unrelated_grant_scores_zero() -> None:
 def test_missing_lists_score_zero() -> None:
     assert match_score({}, {"focus_areas": ["STEM"]}) == 0
     assert match_score(OAHU_YOUTH_PROFILE, {}) == 0
+
+
+def test_501c3_qualifies_for_grant_open_to_any_nonprofit() -> None:
+    grant = {"org_types": ["nonprofit"]}
+    assert org_type_eligibility({"org_type": "501(c)(3)"}, grant).status == "eligible"
+    assert org_type_eligibility({"org_type": "fiscally sponsored"}, grant).status == "ineligible"
