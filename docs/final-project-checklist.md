@@ -146,6 +146,85 @@ Each case should have a test or a recorded check.
 ### End-to-end workflow
 - [ ] A user can go from profile form → confirm fields → review matches → save to tracker → update status, all in the running app
 
-## Additional requirements
+## Final project requirements (Module 12)
 
-<!-- To be filled in from the remaining final project requirements. -->
+**Due Friday, December 18, 11:59 p.m. HST.** Cloud Run URL goes on the sign-up sheet by Dec 14 (if presenting Dec 15) or Dec 16 (if presenting Dec 17).
+
+Goal: a classmate opens the public Cloud Run URL, finishes the workflow in a browser, and comes back to the saved result.
+
+### Tech stack
+- [x] FastAPI backend
+- [ ] Pydantic models validate structured data (profile fields, matches, tracker updates)
+- [ ] Pydantic AI implements the LLM agent
+- [ ] Linked records in PostgreSQL on Neon
+- [ ] pgvector stores grant embeddings in the same database
+- [ ] Pydantic Evals runs the eval cases
+- [ ] Logfire traces agent calls
+- [x] uv manages dependencies; `uv.lock` committed
+- [x] Ruff, mypy, and pytest run in GitHub Actions (`.github/workflows/ci.yml`)
+- [ ] Dockerfile
+- [ ] Deployed to Google Cloud Run
+- [ ] Credentials stored in Google Secret Manager
+
+### Core workflow (15 pts)
+- [ ] Browser interface backed by FastAPI for the proposal's user and task
+- [ ] Looks up relevant records from the database (grant listings)
+- [ ] Uses the LLM to extract profile fields, with structured output
+- [ ] Shows the source behind each factual claim: eligibility sentence + source link for every match and exclusion, and the profile text behind each extracted field
+- [ ] Saves at least two linked kinds of records (organization → saved grants) so the user can reopen their work after a restart
+- [ ] User can return to their saved result (e.g. a tracker page with its own URL)
+
+### Semantic feature (10 pts)
+- [ ] Embed each grant listing and store it in a pgvector column
+- [ ] A feature the user can try: semantic search ("describe what you need") over grants, or "similar grants" from a saved grant
+
+### Evaluation (10 pts)
+- [ ] Versioned Pydantic Evals set with at least 15 cases (input + expected result); the 8 proposal cases count
+- [ ] At least one deterministic check (e.g. extracted island and org type match exactly)
+- [ ] An LLM-judge rubric (e.g. "does the one-line reason follow from the eligibility sentence?")
+- [ ] Compare the judge's decisions with your own judgments
+- [ ] Baseline run, then change one factor (model, temperature, or tools) and rerun the same cases
+- [ ] `docs/EVALUATIONS.md`: baseline settings, the changed factor, results for both runs, what you learned
+- [ ] Images in the write-up (chart comparing runs, or screenshots of interesting cases)
+- [ ] Explain how the synthetic profiles were checked against real user inputs (the staff interview helps here)
+
+### Tests and CI (5 pts)
+- [ ] In `docs/proposal.md`, link each acceptance criterion to the test that checks it
+- [ ] Test the failure case: an invalid tracker edit shows an error and the saved record keeps its original values
+- [ ] pytest, Ruff, and mypy pass in the latest GitHub Actions run on the default branch
+- [ ] Decide whether to rename `master` to `main` (the requirements say `main`)
+
+### Deployment and spending controls (5 pts)
+- [ ] Public Cloud Run URL, checked from another machine
+- [ ] Merges to the default branch redeploy the app
+- [ ] Dedicated PostgreSQL login role for the app, granted only the operations it needs on each table
+- [ ] Cloud Run connects as that role; credentials and other secrets come from Secret Manager
+- [ ] Spending limit on the model key
+- [ ] Maximum number of instances set on the Cloud Run service
+
+### Repository (5 pts)
+- [x] Build through pull requests
+- [ ] Update `AGENTS.md` and `docs/proposal.md` to describe the app as built
+- [ ] README links to the live app and the recorded demo
+- [ ] README diagram: browser → FastAPI on Cloud Run → agent → Neon (Postgres + pgvector) → model API and Logfire
+- [ ] Repository is public, or both instructors and both TAs are collaborators
+
+### Presentation (30 pts)
+- [ ] Sign up for a presentation slot
+- [ ] Cloud Run URL on the sign-up sheet by the deadline
+- [ ] Record a three-minute demo video before the presentation date
+- [ ] Slides as a PDF (`docs/presentation.pdf`)
+- [ ] 2½ min: user, task, README diagram traced for one action, what the agent does, its tools, data it reads/writes
+- [ ] 3 min: live demo with one realistic input through the public URL
+- [ ] 1½ min: one challenge and how the coding agent helped or got in the way; one saved Pydantic Evals result
+- [ ] 30 sec: one improvement you'd make next
+- [ ] Rehearse to stay under 8 minutes
+
+### Individual reflection (10 pts)
+- [ ] About one page at `docs/reflection.pdf`: what happened (one clear moment, what you tried, what the agent did vs. what you did) and what you learned
+
+### Submission
+- [ ] Code, tests, and evaluation materials committed
+- [ ] `docs/EVALUATIONS.md`, `docs/reflection.pdf`, `docs/presentation.pdf` in the repo
+- [ ] README links to the deployed app and the video
+- [ ] Confirm with the TAs before the deadline that they can open the files, use the app, and play the video
