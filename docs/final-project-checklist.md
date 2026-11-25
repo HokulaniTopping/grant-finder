@@ -26,37 +26,37 @@
 Done when `db/migrations/`, `db/seed.py`, `db/queries.py`, `tests/test_queries.py`, and `.env.example` are merged through a PR, `npx dbmate status` shows `Pending: 0`, sample rows are loaded, and `uv run pytest` passes.
 
 ### Before starting
-- [ ] Add a **Saved records** answer to `docs/proposal.md` naming at least two linked kinds of records the app must remember after it stops (it isn't there yet)
+- [x] Add a **Saved records** answer to `docs/proposal.md` naming at least two linked kinds of records the app must remember after it stops
 
 ### Step 1: Create the database
-- [ ] Create a new Neon project just for Grant Finder
+- [x] Create a new Neon project just for Grant Finder
 - [ ] Put `DATABASE_URL` and `DBMATE_NO_DUMP_SCHEMA=true` in `.env`
 - [x] Confirm `.env` is in `.gitignore`
-- [ ] Create `.env.example` with sample values only (committed)
-- [ ] `uv add "psycopg[binary]" python-dotenv`
-- [ ] Confirm `npx --version` works
+- [x] Create `.env.example` with sample values only (committed)
+- [x] `uv add "psycopg[binary]" python-dotenv`
+- [x] Confirm `npx --version` works
 
 ### Step 2: Design the data model
-- [ ] Use the brainstorming skill to decide entities, attributes, relationships (one-to-many / many-to-many / one-to-one), required and unique values, and ON DELETE behavior
-- [ ] Answer each design question yourself (entity or attribute? how many on each side? needed now?)
-- [ ] Write the approved decisions into `docs/proposal.md` (no separate spec, no code yet)
+- [x] Use the brainstorming skill to decide entities, attributes, relationships (one-to-many / many-to-many / one-to-one), required and unique values, and ON DELETE behavior
+- [x] Answer each design question yourself (entity or attribute? how many on each side? needed now?)
+- [x] Write the approved decisions into `docs/proposal.md` (no separate spec, no code yet)
 
 ### Step 3: Write the first migration
-- [ ] `npx dbmate new create_tables`
-- [ ] Have the agent write raw SQL under `-- migrate:up`, leaving `-- migrate:down` empty
+- [x] `npx dbmate new create_tables`
+- [x] Have the agent write raw SQL under `-- migrate:up`, leaving `-- migrate:down` empty
 
 ### Step 4: Review the schema before running it
-- [ ] Every table has a primary key
-- [ ] Every relationship is a foreign key (no parent names stored as text)
-- [ ] No column stores a list
-- [ ] Required columns are `NOT NULL`
-- [ ] Values that must not repeat are `UNIQUE`
-- [ ] Junction tables have a composite primary key
-- [ ] Foreign-key columns that are filtered or joined on have an index
-- [ ] Every table is needed now
-- [ ] Moments use `timestamptz`, calendar dates use `date`
-- [ ] Each column's type matches its values
-- [ ] Every foreign key states its `ON DELETE` behavior
+- [x] Every table has a primary key
+- [x] Every relationship is a foreign key (no parent names stored as text)
+- [x] No column stores a list
+- [x] Required columns are `NOT NULL`
+- [x] Values that must not repeat are `UNIQUE`
+- [x] Junction tables have a composite primary key
+- [x] Foreign-key columns that are filtered or joined on have an index
+- [x] Every table is needed now
+- [x] Moments use `timestamptz`, calendar dates use `date`
+- [x] Each column's type matches its values
+- [x] Every foreign key states its `ON DELETE` behavior
 
 ### Step 5: Run the migration
 - [ ] `npx dbmate status` shows the file pending
@@ -64,24 +64,24 @@ Done when `db/migrations/`, `db/seed.py`, `db/queries.py`, `tests/test_queries.p
 - [ ] `npx dbmate status` shows `Pending: 0`
 
 ### Step 6: Load sample data
-- [ ] Write `db/seed.py` (stops if rows exist, one transaction, `RETURNING id`, `%s` parameters, 3–8 rows per table)
-- [ ] Sample rows include a parent with no children, a parent with several, a NULL optional column, and long text or an apostrophe (e.g. "O'ahu")
+- [x] Write `db/seed.py` (stops if rows exist, one transaction, `RETURNING id`, `%s` parameters, 3–8 rows per table)
+- [x] Sample rows include a parent with no children, a parent with several, a NULL optional column, and long text or an apostrophe (e.g. "O'ahu")
 - [ ] Read it, then run `uv run python db/seed.py` once
 
 ### Step 7: Write the test first
-- [ ] Pick one question the app asks its data
-- [ ] Add a stub in `db/queries.py` that raises `NotImplementedError`
-- [ ] Write `tests/test_queries.py` with a rollback fixture and `skipif` when `DATABASE_URL` is not set
-- [ ] Run `uv run pytest` and confirm it fails at `NotImplementedError` (red)
+- [x] Pick one question the app asks its data
+- [x] Add a stub in `db/queries.py` that raises `NotImplementedError`
+- [x] Write `tests/test_queries.py` with a rollback fixture and `skipif` when `DATABASE_URL` is not set
+- [x] Run `uv run pytest` and confirm it fails at `NotImplementedError` (red)
 
 ### Step 8: Write the query
-- [ ] Implement the function with `%s` parameters and a one-line docstring, without changing the test
-- [ ] Run `uv run pytest` and confirm it passes (green)
+- [x] Implement the function with `%s` parameters and a one-line docstring, without changing the test
+- [x] Run `uv run pytest` and confirm it passes (green)
 
 ### Step 9: Pull request
-- [ ] Commit on a branch: `db/migrations/`, `db/seed.py`, `db/queries.py`, `tests/test_queries.py`, `.env.example`, `docs/proposal.md`, `pyproject.toml`, `uv.lock`
-- [ ] PR description lists each relationship and its kind
-- [ ] Confirm `.env` is not in the diff
+- [x] Commit on a branch: `db/migrations/`, `db/seed.py`, `db/queries.py`, `tests/test_queries.py`, `.env.example`, `docs/proposal.md`, `pyproject.toml`, `uv.lock`
+- [x] PR description lists each relationship and its kind
+- [x] Confirm `.env` is not in the diff
 - [ ] Merge after review
 
 ### Rules going forward
@@ -97,7 +97,7 @@ Everything the proposal promises, so the finished app covers all of it.
 - [ ] Interview one Hawaii nonprofit staff member about how they search for grants now
 - [ ] Confirm which grant sources matter most to them
 - [ ] Decide whether matching is rule-based, AI-assisted, or a mix, and record the decision in the proposal
-- [ ] Add a **Saved records** answer to the proposal (also needed for the database work)
+- [x] Add a **Saved records** answer to the proposal (also needed for the database work)
 
 ### Grant data
 - [x] Collect a set of real public grant listings (foundation pages, county/state pages, PDFs, Grants.gov) covering education, culture, food, and environment

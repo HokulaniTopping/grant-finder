@@ -75,6 +75,51 @@ The user starts in the profile form, confirms the extracted fields, reviews matc
 
 The grant listings come from public grant opportunities, such as foundation pages, county and state funding pages, PDFs, and Grants.gov. The organization profile is user-entered and synthetic for testing.
 
+## Saved records
+
+After it stops, the app must still remember:
+
+- **Organizations**: the profile the user typed and the fields they confirmed, reachable through a private link so the user can return to their tracker without an account.
+- **Grants**: the public grant listings, with the exact eligibility sentence and source link behind every match, plus an embedding for semantic search.
+- **Saved grants**: each grant an organization saves to its tracker, with its current application status.
+
+Organizations and grants are linked through saved grants: one organization saves many grants, and one grant can be saved by many organizations.
+
+## Database design
+
+PostgreSQL on Neon, raw SQL, created through dbmate migrations.
+
+**Entities and attributes**
+
+| Table | One row stores | Key columns |
+|---|---|---|
+| `organizations` | one nonprofit profile | private `access_token` (unique), the typed `description` (required), extracted `name`, `org_type`, `island`, `location`, `population`, `budget` (all optional until confirmed), `created_at` |
+| `grants` | one public grant listing | `slug` (unique), `name`, `funder`, `source_url`, `eligibility_sentence`, `amount_text` (all required), `deadline` (date, optional), `deadline_note`, `verified`, `embedding` (vector(1536), optional until generated) |
+| `saved_grants` | one grant on one organization's tracker | `status` (required, one of interested, drafting, submitted, awarded, declined), `saved_at`, `updated_at` |
+| `focus_areas` | one topic from the shared vocabulary (e.g. youth education) | `name` (unique) |
+| `funding_uses` | one thing grant money can pay for (e.g. equipment) | `name` (unique) |
+| `grant_islands` | one island a grant serves | `island` (one of the island keys or `statewide`) |
+| `grant_org_types` | one legal type a grant accepts | `org_type` (one of 501(c)(3), fiscally sponsored, nonprofit, public school) |
+
+**Relationships**
+
+| Relationship | Kind | How it is stored | On delete |
+|---|---|---|---|
+| organizations ↔ grants (tracker) | many-to-many | `saved_grants` (organization_id, grant_id), unique per pair | deleting an organization deletes its saved grants; a grant on any tracker cannot be deleted |
+| grants ↔ focus_areas | many-to-many | `grant_focus_areas`, composite primary key | cascade from grant; a focus area in use cannot be deleted |
+| organizations ↔ focus_areas | many-to-many | `organization_focus_areas`, composite primary key | cascade from organization; restrict on focus area |
+| grants ↔ funding_uses | many-to-many | `grant_funding_uses`, composite primary key | cascade from grant; restrict on use |
+| organizations ↔ funding_uses (needs) | many-to-many | `organization_needs`, composite primary key | cascade from organization; restrict on use |
+| grants → grant_islands | one-to-many | `grant_islands.grant_id`, primary key (grant_id, island) | cascade from grant |
+| grants → grant_org_types | one-to-many | `grant_org_types.grant_id`, primary key (grant_id, org_type) | cascade from grant |
+
+**Decisions**
+
+- Lists (focus areas, needs, islands, accepted org types) are rows in their own tables, never a list in one column.
+- Only the current status is stored, not a history of changes.
+- A grant whose listing does not state which org types qualify has no `grant_org_types` rows; the eligibility rule then reports "unknown" rather than guessing.
+- An organization's `org_type` is free text because extraction may return types the app does not list; its `island` is limited to the known island keys.
+
 ## Up to three core features
 
 1. Turn a plain-language nonprofit profile into structured fields.
